@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>A Multiplayer Game</title>
+    <script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="/static/js/PxLoader.js"></script>
+	<script type="text/javascript" src="/static/js/PxLoaderImage.js"></script> 
+  </head>
+  <body>
+  <div style="max-width: 1400px;margin: auto;">
+	<center>
+    <button id="btny" type="button" onclick="yellow()">Yellow</button> 
+    <button id="btnr" type="button" onclick="red()">Red</button> 
+	<button id="btng" type="button" onclick="green()">Green</button> 
+	<button id="btnb" type="button" onclick="blue()">Blue</button> 
+	<h3 id="role" style="display:none;"></h3>
+	<h4 id="timer"></h4>
+	<div style="position: relative;">
+	 <canvas id="canvas" width="1400" height="800" style="position: absolute; left: 0; top: 0; z-index: 0;border: 5px solid black;display:none;"></canvas>
+	 <canvas id="filter" width="1400" height="800" style="position: absolute; left: 0; top: 0; z-index: 1;border: 5px solid black;display:none;"></canvas>
+	</div>
+  </div>
+  </body>
+  <script src="/static/game.js"></script>
+</html>
