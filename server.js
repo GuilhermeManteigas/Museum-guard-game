@@ -154,3 +154,15 @@ function check_interaction(x, y, socketId){
 setInterval(function() {
   io.sockets.emit('state', players);
 }, 1000 / 60);
+
+var gamelog = [];
+setInterval(function() {
+	if (game_started && game_time > 0){
+		gamelog[0].push(players);
+	}
+}, 1000);
+
+function savejson(){
+	//var jsonString = JSON.stringify(gamelog);
+}
+
