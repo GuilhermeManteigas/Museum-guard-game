@@ -155,14 +155,27 @@ setInterval(function() {
   io.sockets.emit('state', players);
 }, 1000 / 60);
 
-var gamelog = [];
+
+var gameslog = [];
+var game = [];
 setInterval(function() {
 	if (game_started && game_time > 0){
-		gamelog[0].push(players);
+		//gamelogs[0].push(players);
+		var temp = []
+		for (var id in players) {
+			var player = players[id];
+			temp.push([player.color, player.x, player.y, player.role]);
+		}
+		game.push(temp);
+	}else if (game_started && game_time > 0){
+		gamelogs.push(game);
+		game = []
 	}
+	
 }, 1000);
 
+
 function savejson(){
-	//var jsonString = JSON.stringify(gamelog);
+	//var jsonString = JSON.stringify(gamelogs);
 }
 

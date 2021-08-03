@@ -9,14 +9,26 @@
   <div style="max-width: 1400px;margin: auto;">
 	<center>
 	<h3>ADMIN Panel</h3>
-    <button id="btnstart" type="button" onclick="start()">Start</button> 
+    <button id="btnstart" type="button" onclick="start()">Start New Experiment</button> 
+	<button id="btnstart" type="button" onclick="start()">Start a new round</button> 
 	<h3 id="status"></h3>
+	<br><br>
+	<h2><b>Current Game status</b></h2>
+	<h3 id="timer">Time left: 02:00</h3>
 	<button id="yellowstatus" type="button" class="btn btn-lg btn-danger" style="width: 150px;">Yellow</button>
 	<button id="redstatus" type="button" class="btn btn-lg btn-danger" style="width: 150px;">Red</button>
 	<button id="greenstatus" type="button" class="btn btn-lg btn-danger" style="width: 150px;">Green</button>
 	<button id="bluestatus" type="button" class="btn btn-lg btn-danger" style="width: 150px;">Blue</button>
-	
-	
+	<br>
+	<br>
+	<div class="row">
+		<div class="col">
+			<div class="alert alert-success" role="alert">Green -> Player ready to start</div>
+		</div>
+		<div class="col">
+			<div class="alert alert-danger" role="alert">Red -> Player not ready to start</div>
+		</div>
+	</div>
 
   </div>
   </body>

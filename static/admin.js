@@ -1,5 +1,6 @@
 var socket = io();
 var players;
+var game_time = 120;
 
 //Receive
 //socket.on('message', function(data) {
@@ -13,8 +14,24 @@ socket.on('state', function(playersdata) {
 	players = playersdata
 });
 
-function update_status(){
-	document.getElementById("status").innerHTML = "Yellow";
+socket.on('timer', function(time) {
+  game_time = time
+});
+
+function get_time(){
+	if (game_time >= 130){
+		return "02:" + (game_time - 120);
+	}else if (game_time >= 120){
+		return "02:0" + (game_time - 120);
+	}else if (game_time >= 70){
+		return  "01:" + (game_time - 60);
+	}else if (game_time >= 60){
+		return  "01:0" + (game_time - 60);
+	}else if (game_time >= 10){
+		return  "00:" + game_time;
+	}else{
+		return  "00:0" + game_time;
+	}
 }
 
 setInterval(function() {
@@ -32,22 +49,23 @@ setInterval(function() {
 	document.getElementById("bluestatus").classList.add('btn-danger');
 		
 	for (var id in players) {
-    var player = players[id];
-	if (player.color == "yellow"){
-		document.getElementById("yellowstatus").classList.remove('btn-danger');
-		document.getElementById("yellowstatus").classList.add('btn-success');
-	}else if (player.color == "red"){
-		document.getElementById("redstatus").classList.remove('btn-danger');
-		document.getElementById("redstatus").classList.add('btn-success');
-	}else if (player.color == "green"){
-		document.getElementById("greenstatus").classList.remove('btn-danger');
-		document.getElementById("greenstatus").classList.add('btn-success');
-	}else if (player.color == "blue"){
-		document.getElementById("bluestatus").classList.remove('btn-danger');
-		document.getElementById("bluestatus").classList.add('btn-success');
+		var player = players[id];
+		if (player.color == "yellow"){
+			document.getElementById("yellowstatus").classList.remove('btn-danger');
+			document.getElementById("yellowstatus").classList.add('btn-success');
+		}else if (player.color == "red"){
+			document.getElementById("redstatus").classList.remove('btn-danger');
+			document.getElementById("redstatus").classList.add('btn-success');
+		}else if (player.color == "green"){
+			document.getElementById("greenstatus").classList.remove('btn-danger');
+			document.getElementById("greenstatus").classList.add('btn-success');
+		}else if (player.color == "blue"){
+			document.getElementById("bluestatus").classList.remove('btn-danger');
+			document.getElementById("bluestatus").classList.add('btn-success');
+		}
 	}
-  }
-	  
+	
+	document.getElementById("timer").innerHTML = "Time left: " + get_time() ;
 	  
 	  
 }, 1000);
