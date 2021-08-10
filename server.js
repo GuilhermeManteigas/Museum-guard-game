@@ -51,11 +51,13 @@ setInterval(function() {
  if (game_started && game_time > 0){
 	 io.sockets.emit('timer', game_time)
 	 game_time--;
-	 if (game_time == 0){
+	 if (game_time <= 0){
 		 //
 		 //GAME ENDED!!!!
 		 //Call game end function
 		 //
+		 io.sockets.emit('timer', game_time)
+		 newgame();
 	 }
  }
 }, 1000);
@@ -75,54 +77,60 @@ io.on('connection', function(socket) {
 	}else{
 		io.to(socket.id).emit('role', false);
 	}
+	//Starts game if 4 players connected
 	if (Object.keys(players).length == 4){
-		game_started = true;
+		//game_started = true;
 	}
   });
   socket.on('disconnect', function(){
     delete players[socket.id];
   });
+  socket.on('start_round', function(bool){
+    game_started = true;
+  });
   socket.on('movement', function(data) {
-    var player = players[socket.id] || {};
-    if (data.left) {
-		if (!check_colisions(player.x - 5, player.y)){
-			player.x -= 5;
+	  if (game_started){
+		var player = players[socket.id] || {};
+		if (data.left) {
+			if (!check_colisions(player.x - 5, player.y)){
+				player.x -= 5;
+			}
+			//player.x -= 5;
 		}
-		//player.x -= 5;
-    }
-    if (data.up) {
-		if (!check_colisions(player.x, player.y - 5)){
-			player.y -= 5;
+		if (data.up) {
+			if (!check_colisions(player.x, player.y - 5)){
+				player.y -= 5;
+			}
+		  //player.y -= 5;
 		}
-      //player.y -= 5;
-    }
-    if (data.right) {
-		if (!check_colisions(player.x + 5, player.y)){
-			player.x += 5;
+		if (data.right) {
+			if (!check_colisions(player.x + 5, player.y)){
+				player.x += 5;
+			}
+		  //player.x += 5;
 		}
-      //player.x += 5;
-    }
-    if (data.down) {
-		if (!check_colisions(player.x, player.y + 5)){
-			player.y += 5;
+		if (data.down) {
+			if (!check_colisions(player.x, player.y + 5)){
+				player.y += 5;
+			}
+		  //player.y += 5;
 		}
-      //player.y += 5;
-    }
-	
-	if (player.x >= canvaswidth - 25 - player_margin) {
-        player.x = canvaswidth - 25 - player_margin;
-    } else if (player.x <= 25 + player_margin) {
-        player.x = 25 + player_margin;
-    }
+		
+		if (player.x >= canvaswidth - 25 - player_margin) {
+			player.x = canvaswidth - 25 - player_margin;
+		} else if (player.x <= 25 + player_margin) {
+			player.x = 25 + player_margin;
+		}
 
-    if (player.y > canvasheight - 25 - player_margin) {
-        player.y = canvasheight - 25 - player_margin;
-    } else if (player.y <= 25 + player_margin) {
-        player.y = 25 + player_margin;
-    }
-	
-	check_interaction(player.x, player.y, socket.id)
-	
+		if (player.y > canvasheight - 25 - player_margin) {
+			player.y = canvasheight - 25 - player_margin;
+		} else if (player.y <= 25 + player_margin) {
+			player.y = 25 + player_margin;
+		}
+		
+		check_interaction(player.x, player.y, socket.id)
+	  }
+	  
   });
 });
 
@@ -184,6 +192,7 @@ function savejson(){
 
 
 function newgame(){
+	game_started = false;
 	game_time = game_length;
 	game_number++;
 	for (var id in players) {
@@ -204,6 +213,9 @@ function newgame(){
 		}
 		if (player.color == game_randomness[game_number]){
 			player.role = true;
+			io.to(socket.id).emit('role', true);
+		}else{
+			io.to(socket.id).emit('role', false);
 		}
 		//RESET GEMS HERE
 		

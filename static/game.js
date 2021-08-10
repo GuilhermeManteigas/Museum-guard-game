@@ -25,11 +25,11 @@ socket.on('message', function(data) {
 });
 socket.on('role', function(role) {
   playerrole = role
-  if (playerrole){
-	  document.getElementById("role").innerHTML = "You are a Thief!";
-  }else{
-	  document.getElementById("role").innerHTML = "You are a Guard!";
-  }
+  //if (playerrole){
+//	  document.getElementById("role").innerHTML = "You are a Thief!";
+  //}else{
+	//  document.getElementById("role").innerHTML = "You are a Guard!";
+  //}
 });
 socket.on('interaction', function(interaction) {
   playerinteraction = interaction
@@ -227,9 +227,14 @@ function drawscreen() {
     context.arc(player.x, player.y, 15, 0, 2 * Math.PI);
     context.fill();
 	if (player.color == playercolor){
+		if (player.role){
+			document.getElementById("role").innerHTML = "You are a Thief!";
+		}else{
+			document.getElementById("role").innerHTML = "You are a Guard!";
+		}
 		if (playerinteraction){
 			context.fillStyle = "white";
-			if (playerrole){
+			if (player.role){
 				//context.fillText("Press Space to steal the Gem!", player.x + 20, player.y - 20);
 				context.fillText("Press Space to", player.x - 50, player.y - 40);
 				context.fillText("steal the Gem!", player.x - 50, player.y - 20);
@@ -238,6 +243,7 @@ function drawscreen() {
 				context.fillText("report the robery!", player.x - 50, player.y - 20);
 			}
 		}
+		
 		//dark(player.x+5, player.y+5);
 	}
   }

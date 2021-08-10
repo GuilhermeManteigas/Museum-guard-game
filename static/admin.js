@@ -102,3 +102,7 @@ setInterval(function() {
 	  
 }, 1000);
 
+
+function start_round(){
+	socket.emit('start_round', true);
+}
