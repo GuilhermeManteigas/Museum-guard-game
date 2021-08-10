@@ -18,6 +18,38 @@ socket.on('timer', function(time) {
   game_time = time
 });
 
+socket.on('status', function(game_started,gamelogslength) {
+	if (game_started){
+		document.getElementById("status").innerHTML = "Current Game status: Playing";
+	}else{
+		document.getElementById("status").innerHTML = "Current Game status: Stopped";
+	}
+	for (i =0;i <= gamelogslength; i++){
+		number =i + 1;
+		//var name = "game" + i
+		document.getElementById("game"+number).classList.remove('btn-danger');
+		document.getElementById("game"+number).classList.add('btn-success');
+	}
+	document.getElementById("game"+(gamelogslength+1)).classList.remove('btn-danger');
+	document.getElementById("game"+(gamelogslength+1)).classList.remove('btn-success');
+	document.getElementById("game"+(gamelogslength+1)).classList.add('btn-warning');
+});
+
+socket.on('log', function(gameslog) {
+	txt = "";
+	for (var i = 0; i < gameslog.length; i++){
+		for (var j = 0; j < gameslog[i].length; j++){
+			for (var c = 0; c < 4; c++){
+				txt = txt + gameslog[i][j][c] + "  ";
+			}
+			txt = txt + "\n";
+			//txt = txt + gameslog[i][j][0] + "\n";//": x = " + gameslog[i][j][1] + "  y = " + gameslog[i][j][2] + "\n";
+			//[player.color, player.x, player.y, player.role]
+		}
+	}
+	document.getElementById("log").innerHTML = txt;
+});
+
 function get_time(){
 	if (game_time >= 130){
 		return "02:" + (game_time - 120);

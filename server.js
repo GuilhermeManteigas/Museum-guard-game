@@ -160,22 +160,60 @@ var gameslog = [];
 var game = [];
 setInterval(function() {
 	if (game_started && game_time > 0){
-		//gamelogs[0].push(players);
+		//gameslog[0].push(players);
 		var temp = []
 		for (var id in players) {
 			var player = players[id];
 			temp.push([player.color, player.x, player.y, player.role]);
 		}
 		game.push(temp);
-	}else if (game_started && game_time > 0){
-		gamelogs.push(game);
+	}else if (game_started && game_time <= 0){
+		gameslog.push(game);
 		game = []
+		io.sockets.emit('log', gameslog);
 	}
 	
 }, 1000);
+
+
 
 
 function savejson(){
 	//var jsonString = JSON.stringify(gamelogs);
 }
 
+
+function newgame(){
+	game_time = game_length;
+	game_number++;
+	for (var id in players) {
+		var player = players[id];
+		player.role = false;
+		if (player.color == "yellow"){
+			player.x = 530;
+			player.y = 330;
+		}else if (player.color == "red"){
+			player.x = 530;
+			player.y = 400;
+		}else if (player.color == "green"){
+			player.x = 730;
+			player.y = 330;
+		}else if (player.color == "blue"){
+			player.x = 730;
+			player.y = 400;
+		}
+		if (player.color == game_randomness[game_number]){
+			player.role = true;
+		}
+		//RESET GEMS HERE
+		
+		
+  }
+	
+	
+}
+
+
+setInterval(function() {
+  io.sockets.emit('status', game_started, game_number);
+}, 1000 / 60);

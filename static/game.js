@@ -26,7 +26,7 @@ socket.on('message', function(data) {
 socket.on('role', function(role) {
   playerrole = role
   if (playerrole){
-	  document.getElementById("role").innerHTML = "You are a Burglar!";
+	  document.getElementById("role").innerHTML = "You are a Thief!";
   }else{
 	  document.getElementById("role").innerHTML = "You are a Guard!";
   }
@@ -58,6 +58,18 @@ document.addEventListener('keydown', function(event) {
     case 83: // S
       movement.down = true;
       break;
+	case 37: // Arrow Left
+      movement.left = true;
+      break;
+    case 38: // Arrow Up 
+      movement.up = true;
+      break;
+    case 39: // Arrow Right
+      movement.right = true;
+      break;
+    case 40: // Arrow Down
+      movement.down = true;
+      break;
   }
 });
 document.addEventListener('keyup', function(event) {
@@ -74,6 +86,18 @@ document.addEventListener('keyup', function(event) {
     case 83: // S
       movement.down = false;
       break;
+	case 37: // Arrow Left
+      movement.left = false;
+      break;
+    case 38: // Arrow Up 
+      movement.up = false;
+      break;
+    case 39: // Arrow Right
+      movement.right = false;
+      break;
+    case 40: // Arrow Down
+      movement.down = false;
+      break;
   }
 });
 
@@ -83,11 +107,13 @@ function yellow(){
 	setInterval(function() {
 	  socket.emit('movement', movement);
 	}, 1000 / 60);
+	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
 	document.getElementById("btnr").style.display = "none";
 	document.getElementById("btng").style.display = "none";
 	document.getElementById("btnb").style.display = "none";
 	document.getElementById("role").style.display = "block";
+	document.getElementById("timer").style.display = "block";
 	document.getElementById("canvas").style.display = "block";
 	document.getElementById("filter").style.display = "block";
 }
@@ -98,11 +124,13 @@ function red(){
 	setInterval(function() {
 	  socket.emit('movement', movement);
 	}, 1000 / 60);
+	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
 	document.getElementById("btnr").style.display = "none";
 	document.getElementById("btng").style.display = "none";
 	document.getElementById("btnb").style.display = "none";
 	document.getElementById("role").style.display = "block";
+	document.getElementById("timer").style.display = "block";
 	document.getElementById("canvas").style.display = "block";
 	document.getElementById("filter").style.display = "block";
 }
@@ -113,11 +141,13 @@ function green(){
 	setInterval(function() {
 	  socket.emit('movement', movement);
 	}, 1000 / 60);
+	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
 	document.getElementById("btnr").style.display = "none";
 	document.getElementById("btng").style.display = "none";
 	document.getElementById("btnb").style.display = "none";
 	document.getElementById("role").style.display = "block";
+	document.getElementById("timer").style.display = "block";
 	document.getElementById("canvas").style.display = "block";
 	document.getElementById("filter").style.display = "block";
 }
@@ -128,21 +158,17 @@ function blue(){
 	setInterval(function() {
 	  socket.emit('movement', movement);
 	}, 1000 / 60);
+	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
 	document.getElementById("btnr").style.display = "none";
 	document.getElementById("btng").style.display = "none";
 	document.getElementById("btnb").style.display = "none";
 	document.getElementById("role").style.display = "block";
+	document.getElementById("timer").style.display = "block";
 	document.getElementById("canvas").style.display = "block";
 	document.getElementById("filter").style.display = "block";
 }
 
-
-
-//socket.emit('new player', 'red');
-//setInterval(function() {
-//  socket.emit('movement', movement);
-//}, 1000 / 60);
 
 var canvas = document.getElementById('canvas');
 canvas.width = 1400;
@@ -155,81 +181,9 @@ filter.width = 1400;
 filter.height = 800;
 var ctxfilter = filter.getContext('2d');
 
-//var image = new Image();
-//image.src = "/static/assets/diamond.png";
 
 socket.on('state', function(playersdata) {
-	
 	players = playersdata
-	
-  //context.clearRect(0, 0, canvas.width, canvas.height);
-  
-  //context.drawImage(diamond, 200, 175);
-  //context.drawImage(map, 0, 0);
-  
-  //context.drawImage(gem1, 29, 171);
-  //context.drawImage(gem2, 449, 158);
-  //context.drawImage(gem3, 1119, 32);
-  //context.drawImage(gem4, 1305, 439);
-  //context.drawImage(gem5, 772, 706);
-  //context.drawImage(gem6, 354, 500);
-  
-  
-  //for (var id in players) {
-    //var player = players[id];
-	//context.fillStyle = player.color;
-    //context.beginPath();
-    //context.arc(player.x, player.y, 15, 0, 2 * Math.PI);
-    //context.fill();
-	//if (player.color == playercolor){
-		//if (playerinteraction){
-			//context.fillStyle = "white";
-			//if (playerrole){
-				//context.fillText("Press Space to steal the Gem!", player.x + 20, player.y - 20);
-			//	context.fillText("Press Space to", player.x - 50, player.y - 40);
-			//	context.fillText("steal the Gem!", player.x - 50, player.y - 20);
-			//}else{
-				//context.fillText("Press Space to report the robery!", player.x + 20, player.y - 20);
-			//}
-		//}
-		//dark(player.x+5, player.y+5);
-	//}
-  //}
-  
-  
-  
-  
-  //TESTE
-  //context.fillRect(311, 98, 26, 19); // done
-  //context.fillRect(311, 114, 135, 26);
-  //context.fillRect(420, 138, 26, 173);
-  //context.fillRect(420, 385, 26, 251);
-  //context.fillRect(420, 712, 26, 70);
-  //context.fillRect(445, 225, 155, 26);
-  //context.fillRect(675, 225, 574, 26);
-  //context.fillRect(1326, 225, 60, 26);
-  //context.fillRect(24, 471, 45, 26);
-  //context.fillRect(142, 471, 452, 26);
-  //context.fillRect(670, 471, 187, 26);
-  //context.fillRect(831, 250, 26, 70);
-  //context.fillRect(831, 395, 26, 220);
-  //context.fillRect(831, 593, 303, 26);
-  //context.fillRect(1108, 593, 26, 84);
-  //context.fillRect(1108, 750, 26, 30);
-  //context.fillRect(947, 20, 26, 79);
-  //context.fillRect(889, 73, 80, 26);
-  //context.fillRect(947, 155, 26, 80);
-  //context.fillRect(889, 155, 80, 26);
-  
-  //context.fillRect(25, 171, 67, 63);
-  //context.fillRect(445, 158, 67, 67);
-  //context.fillRect(1119, 25, 63, 70);
-  //context.fillRect(1305, 439, 70, 63);
-  //context.fillRect(772, 706, 63, 70);
-  //context.fillRect(354, 496, 67, 67);
-  
- 
-  
 });
 
 function get_time(){
@@ -280,7 +234,8 @@ function drawscreen() {
 				context.fillText("Press Space to", player.x - 50, player.y - 40);
 				context.fillText("steal the Gem!", player.x - 50, player.y - 20);
 			}else{
-				context.fillText("Press Space to report the robery!", player.x + 20, player.y - 20);
+				context.fillText("Press Space to", player.x - 50, player.y - 40);
+				context.fillText("report the robery!", player.x - 50, player.y - 20);
 			}
 		}
 		//dark(player.x+5, player.y+5);
@@ -295,7 +250,7 @@ requestAnimationFrame(drawscreen);
 
 function dark(x, y){
   // first reset the gCO
-  radius = 120;
+  radius = 150;
   ctxfilter.globalCompositeOperation = 'source-over';
   // Paint the canvas black.
   ctxfilter.fillStyle = '#000';
