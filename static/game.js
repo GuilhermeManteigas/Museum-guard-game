@@ -3,6 +3,7 @@ var playerrole = false;
 var playerinteraction = false;
 var players;
 var game_time = 0;
+var gem_list = [];
 
 
 var loader = new PxLoader(), 
@@ -32,17 +33,21 @@ socket.on('role', function(role) {
   //}
 });
 socket.on('interaction', function(interaction) {
-  playerinteraction = interaction
+  playerinteraction = interaction;
 });
 socket.on('timer', function(time) {
-  game_time = time
+  game_time = time;
+});
+socket.on('stolen_gems', function(gemlist) {
+  gem_list = gemlist;
 });
 
 var movement = {
   up: false,
   down: false,
   left: false,
-  right: false
+  right: false,
+  space: false
 }
 document.addEventListener('keydown', function(event) {
   switch (event.keyCode) {
@@ -70,6 +75,9 @@ document.addEventListener('keydown', function(event) {
     case 40: // Arrow Down
       movement.down = true;
       break;
+	case 32: // Space bar
+	  movement.space = true;
+	  break;
   }
 });
 document.addEventListener('keyup', function(event) {
@@ -98,14 +106,22 @@ document.addEventListener('keyup', function(event) {
     case 40: // Arrow Down
       movement.down = false;
       break;
+	case 32: // Space bar
+	  movement.space = false;
+	  break;
   }
 });
 
 function yellow(){
 	playercolor = 'yellow'
 	socket.emit('new player', 'yellow', 530, 330);
+	//var d = new Date();
+	//var n = d.getTime();
+	var last = performance.now();
 	setInterval(function() {
+		console.log(performance.now() - last)
 	  socket.emit('movement', movement);
+	  last = performance.now();
 	}, 1000 / 60);
 	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
@@ -121,8 +137,11 @@ function yellow(){
 function red(){
 	playercolor = 'red'
 	socket.emit('new player', 'red', 530, 400);
+	var last = performance.now();
 	setInterval(function() {
+	  console.log(performance.now() - last)
 	  socket.emit('movement', movement);
+	  last = performance.now();
 	}, 1000 / 60);
 	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
@@ -202,22 +221,39 @@ function get_time(){
 	}
 }
 
+var timer = document.getElementById("timer");
+var role = document.getElementById("role");
+
 function drawscreen() {
   context.clearRect(0, 0, canvas.width, canvas.height);
   
 
-  document.getElementById("timer").innerHTML = get_time();
+  timer.innerHTML = get_time();
   
   
   //context.drawImage(diamond, 200, 175);
   context.drawImage(map, 0, 0);
   
-  context.drawImage(gem1, 29, 171);
-  context.drawImage(gem2, 449, 158);
-  context.drawImage(gem3, 1119, 32);
-  context.drawImage(gem4, 1305, 439);
-  context.drawImage(gem5, 772, 706);
-  context.drawImage(gem6, 354, 500);
+  
+  if (gem_list[0]){
+	  context.drawImage(gem1, 29, 171);
+  }
+  if (gem_list[1]){
+	  context.drawImage(gem2, 449, 158);
+  }
+  if (gem_list[2]){
+	  context.drawImage(gem3, 1119, 32);
+  }
+  if (gem_list[3]){
+	  context.drawImage(gem4, 1305, 439);
+  }
+  if (gem_list[4]){
+	  context.drawImage(gem5, 772, 706);
+  }
+  if (gem_list[5]){
+	  context.drawImage(gem6, 354, 500);
+  }
+
   
   
   for (var id in players) {
@@ -228,14 +264,13 @@ function drawscreen() {
     context.fill();
 	if (player.color == playercolor){
 		if (player.role){
-			document.getElementById("role").innerHTML = "You are a Thief!";
+			role.innerHTML = "You are a Thief!";
 		}else{
-			document.getElementById("role").innerHTML = "You are a Guard!";
+			role.innerHTML = "You are a Guard!";
 		}
 		if (playerinteraction){
 			context.fillStyle = "white";
 			if (player.role){
-				//context.fillText("Press Space to steal the Gem!", player.x + 20, player.y - 20);
 				context.fillText("Press Space to", player.x - 50, player.y - 40);
 				context.fillText("steal the Gem!", player.x - 50, player.y - 20);
 			}else{
@@ -248,7 +283,7 @@ function drawscreen() {
 	}
   }
   
-  
+
   requestAnimationFrame(drawscreen);
 }
 requestAnimationFrame(drawscreen);

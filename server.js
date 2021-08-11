@@ -115,6 +115,18 @@ io.on('connection', function(socket) {
 			}
 		  //player.y += 5;
 		}
+		if (data.space) {
+			//Player press space
+			if (check_interaction(player.x, player.y, socket.id)){
+				//console.log("1");
+				if (player.role){
+					steal_gem(player.x, player.y, socket.id);
+				}else{
+					
+				}
+			}
+			
+		}
 		
 		if (player.x >= canvaswidth - 25 - player_margin) {
 			player.x = canvaswidth - 25 - player_margin;
@@ -128,7 +140,7 @@ io.on('connection', function(socket) {
 			player.y = 25 + player_margin;
 		}
 		
-		check_interaction(player.x, player.y, socket.id)
+		io.to(socket.id).emit('interaction', check_interaction(player.x, player.y, socket.id));
 	  }
 	  
   });
@@ -148,7 +160,7 @@ function check_colisions(x, y){
 }
 
 interaction_list = [[25, 171, 92, 234],[445, 158, 512, 225],[1119, 25, 1182, 95],[1305, 439, 1375, 502],[772, 706, 835, 776],[354, 496, 421, 563]]
-function check_interaction(x, y, socketId){
+function check_interaction(x, y){
 	var interaction = false;
 	for (let i = 0; i < interaction_list.length; i++) {
 		//if ((colision_list[i][0] < x && x < colision_list[i][2]) && (colision_list[i][1] < y && y < colision_list[i][3])){
@@ -156,8 +168,50 @@ function check_interaction(x, y, socketId){
 			interaction = true;
 		}
 	}
-	io.to(socketId).emit('interaction', interaction);
+	return interaction;
 }
+
+//stolen_list = [[25, 171, 92, 234],[445, 158, 512, 225],[1119, 25, 1182, 95],[1305, 439, 1375, 502],[772, 706, 835, 776],[354, 496, 421, 563]]
+var stolen_list = [true,true,true,true,true,true]
+function steal_gem(x, y, socketId){
+	for (let i = 0; i < interaction_list.length; i++) {
+		if ((interaction_list[i][0] - player_margin*2 < x && x < interaction_list[i][2] + player_margin*3) && (interaction_list[i][1] - player_margin*2 < y && y < interaction_list[i][3] + player_margin*3)){
+			stolen_list[i] = false;
+			//console.log(gems);
+			//stolen_list.push(interaction_list[i]);
+			//var idx = stolen_list.indexOf(interaction_list[i]);
+			//stolen_list.splice(idx, 1);
+			//console.log(stolen_list);
+			//for (let j = 0; j < stolen_list.length; j++) {
+			//	if (interaction_list[i] == stolen_list[j]){
+			//		stolen_list.splice(j, 1);
+			//		console.log(stolen_list);
+			//	}
+			//}
+		}
+	}
+}
+
+function report_crime(x, y, socketId){
+	for (let i = 0; i < interaction_list.length; i++) {
+		if ((interaction_list[i][0] - player_margin*2 < x && x < interaction_list[i][2] + player_margin*3) && (interaction_list[i][1] - player_margin*2 < y && y < interaction_list[i][3] + player_margin*3)){
+			if(stolen_list[i] == false){
+				//
+				//
+				// Crime Reported
+				//
+				//
+			}
+			
+		}
+	}
+}
+
+
+setInterval(function() {
+  io.sockets.emit('stolen_gems', stolen_list);
+  //console.log(stolen_list);
+}, 1000 / 60);
 
 setInterval(function() {
   io.sockets.emit('state', players);
@@ -167,6 +221,8 @@ setInterval(function() {
 var gameslog = [];
 var game = [];
 setInterval(function() {
+	//console.log("==========")
+	//console.log("Time: ", game_time)
 	if (game_started && game_time > 0){
 		//gameslog[0].push(players);
 		var temp = []
@@ -175,11 +231,13 @@ setInterval(function() {
 			temp.push([player.color, player.x, player.y, player.role]);
 		}
 		game.push(temp);
-	}else if (game_started && game_time <= 0){
+	}else if (game_started == false){
+		//io.sockets.emit('message', 'log!!!!');
 		gameslog.push(game);
 		game = []
 		io.sockets.emit('log', gameslog);
 	}
+	//console.log("==========")
 	
 }, 1000);
 
@@ -213,12 +271,9 @@ function newgame(){
 		}
 		if (player.color == game_randomness[game_number]){
 			player.role = true;
-			io.to(socket.id).emit('role', true);
-		}else{
-			io.to(socket.id).emit('role', false);
 		}
 		//RESET GEMS HERE
-		
+		stolen_list = [true,true,true,true,true,true];
 		
   }
 	
