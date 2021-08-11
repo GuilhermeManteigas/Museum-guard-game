@@ -19,6 +19,12 @@ socket.on('timer', function(time) {
 });
 
 socket.on('status', function(game_started,gamelogslength) {
+	document.getElementById("game1").classList.add('btn-danger');
+	document.getElementById("game2").classList.add('btn-danger');
+	document.getElementById("game3").classList.add('btn-danger');
+	document.getElementById("game4").classList.add('btn-danger');
+	document.getElementById("game5").classList.add('btn-danger');
+	document.getElementById("game6").classList.add('btn-danger');
 	if (game_started){
 		document.getElementById("status").innerHTML = "Current Game status: Playing";
 	}else{
@@ -28,6 +34,7 @@ socket.on('status', function(game_started,gamelogslength) {
 		number =i + 1;
 		//var name = "game" + i
 		document.getElementById("game"+number).classList.remove('btn-danger');
+		document.getElementById("game"+number).classList.remove('btn-warning');
 		document.getElementById("game"+number).classList.add('btn-success');
 	}
 	document.getElementById("game"+(gamelogslength+1)).classList.remove('btn-danger');
@@ -105,4 +112,8 @@ setInterval(function() {
 
 function start_round(){
 	socket.emit('start_round', true);
+}
+
+function restart_experiment(){
+	socket.emit('restart_experiment');
 }

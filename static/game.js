@@ -2,8 +2,11 @@ var playercolor = "";
 var playerrole = false;
 var playerinteraction = false;
 var players;
-var game_time = 0;
+var game_time = 120;
 var gem_list = [];
+var nigth = true;
+var game_running = false;
+var game_end = false;
 
 
 var loader = new PxLoader(), 
@@ -40,6 +43,14 @@ socket.on('timer', function(time) {
 });
 socket.on('stolen_gems', function(gemlist) {
   gem_list = gemlist;
+});
+
+socket.on('requestmovement', function() {
+  socket.emit('movement', movement);
+});
+
+socket.on('game_end', function(gameend) {
+  game_end = gameend;
 });
 
 var movement = {
@@ -115,14 +126,12 @@ document.addEventListener('keyup', function(event) {
 function yellow(){
 	playercolor = 'yellow'
 	socket.emit('new player', 'yellow', 530, 330);
-	//var d = new Date();
-	//var n = d.getTime();
-	var last = performance.now();
-	setInterval(function() {
-		console.log(performance.now() - last)
-	  socket.emit('movement', movement);
-	  last = performance.now();
-	}, 1000 / 60);
+	//var last = performance.now();
+	//setInterval(function() {
+	//	console.log(performance.now() - last)
+	//  socket.emit('movement', movement);
+	//  last = performance.now();
+	//}, 1000 / 60);
 	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
 	document.getElementById("btnr").style.display = "none";
@@ -137,12 +146,12 @@ function yellow(){
 function red(){
 	playercolor = 'red'
 	socket.emit('new player', 'red', 530, 400);
-	var last = performance.now();
-	setInterval(function() {
-	  console.log(performance.now() - last)
-	  socket.emit('movement', movement);
-	  last = performance.now();
-	}, 1000 / 60);
+	//var last = performance.now();
+	//setInterval(function() {
+	//  console.log(performance.now() - last)
+	//  socket.emit('movement', movement);
+	//  last = performance.now();
+	//}, 1000 / 60);
 	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
 	document.getElementById("btnr").style.display = "none";
@@ -157,9 +166,9 @@ function red(){
 function green(){
 	playercolor = 'green'
 	socket.emit('new player', 'green', 730, 330);
-	setInterval(function() {
-	  socket.emit('movement', movement);
-	}, 1000 / 60);
+	//setInterval(function() {
+	//  socket.emit('movement', movement);
+	//}, 1000 / 60);
 	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
 	document.getElementById("btnr").style.display = "none";
@@ -174,9 +183,9 @@ function green(){
 function blue(){
 	playercolor = 'blue'
 	socket.emit('new player', 'blue', 730, 400);
-	setInterval(function() {
-	  socket.emit('movement', movement);
-	}, 1000 / 60);
+	//setInterval(function() {
+	//  socket.emit('movement', movement);
+	//}, 1000 / 60);
 	document.getElementById("txtcolor").style.display = "none";
 	document.getElementById("btny").style.display = "none";
 	document.getElementById("btnr").style.display = "none";
@@ -199,11 +208,17 @@ var filter = document.getElementById('filter');
 filter.width = 1400;
 filter.height = 800;
 var ctxfilter = filter.getContext('2d');
+ctxfilter.font = "bold 35px Arial";
 
 
 socket.on('state', function(playersdata) {
 	players = playersdata
 });
+
+socket.on('game_running', function(gamerunning) {
+	game_running = gamerunning
+});
+
 
 function get_time(){
 	if (game_time >= 130){
@@ -233,6 +248,7 @@ function drawscreen() {
   
   //context.drawImage(diamond, 200, 175);
   context.drawImage(map, 0, 0);
+  context.font = "bold 15px Arial";
   
   
   if (gem_list[0]){
@@ -278,8 +294,18 @@ function drawscreen() {
 				context.fillText("report the robery!", player.x - 50, player.y - 20);
 			}
 		}
-		
-		//dark(player.x+5, player.y+5);
+		if (game_time < 110 && game_running){
+			dark(player.x+5, player.y+5);
+		}else{
+			brigth();
+		}
+		if (!game_running && game_end){
+			role.innerHTML = "Waiting for the next game!";
+			context.font = "bold 45px Arial";
+			context.fillStyle = "white";
+			context.fillText("This is the end of the game phase.",350, 100);
+			context.fillText("Please return to the group chat.",375, 160);
+		}
 	}
   }
   
@@ -310,6 +336,7 @@ function dark(x, y){
   ctxfilter.fill();
   
   ctxfilter.closePath();
+  
 }
 
 function brigth(){

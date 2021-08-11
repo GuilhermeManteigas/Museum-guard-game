@@ -23,6 +23,9 @@ game_number = 0;
 game_started = false;
 game_length = 120;
 game_time = game_length;
+game_end = false;
+gameslog = [];
+game = [];
 
 // Routing
 app.get('/', function(request, response) {
@@ -87,6 +90,38 @@ io.on('connection', function(socket) {
   });
   socket.on('start_round', function(bool){
     game_started = true;
+	game_end = false;
+  });
+  socket.on('restart_experiment', function(){
+	game_randomness = ['yellow','red','green','blue','yellow','red']; //Total 6 games
+	game_number = 0;
+	game_started = false;
+	game_length = 120;
+	game_time = game_length;
+	game_end = false;
+	gameslog = [];
+	game = [];
+	stolen_list = [true,true,true,true,true,true];
+	for (var id in players) {
+		var player = players[id];
+		player.role = false;
+		if (player.color == "yellow"){
+			player.x = 530;
+			player.y = 330;
+		}else if (player.color == "red"){
+			player.x = 530;
+			player.y = 400;
+		}else if (player.color == "green"){
+			player.x = 730;
+			player.y = 330;
+		}else if (player.color == "blue"){
+			player.x = 730;
+			player.y = 400;
+		}
+		if (player.color == game_randomness[game_number]){
+			player.role = true;
+		}
+	}
   });
   socket.on('movement', function(data) {
 	  if (game_started){
@@ -122,7 +157,9 @@ io.on('connection', function(socket) {
 				if (player.role){
 					steal_gem(player.x, player.y, socket.id);
 				}else{
-					
+					if (check_crime(player.x, player.y)){
+						newgame();
+					}
 				}
 			}
 			
@@ -140,7 +177,21 @@ io.on('connection', function(socket) {
 			player.y = 25 + player_margin;
 		}
 		
-		io.to(socket.id).emit('interaction', check_interaction(player.x, player.y, socket.id));
+		if (player.role){
+			if (check_crime(player.x, player.y)){
+				io.to(socket.id).emit('interaction', false);
+			}else{
+				io.to(socket.id).emit('interaction', check_interaction(player.x, player.y, socket.id));
+			}
+			//io.to(socket.id).emit('interaction', check_interaction(player.x, player.y, socket.id));
+		}else{
+			if (check_crime(player.x, player.y)){
+				io.to(socket.id).emit('interaction', check_interaction(player.x, player.y, socket.id));
+			}else{
+				io.to(socket.id).emit('interaction', false);
+			}
+		}
+			
 	  }
 	  
   });
@@ -192,7 +243,7 @@ function steal_gem(x, y, socketId){
 	}
 }
 
-function report_crime(x, y, socketId){
+function check_crime(x, y){
 	for (let i = 0; i < interaction_list.length; i++) {
 		if ((interaction_list[i][0] - player_margin*2 < x && x < interaction_list[i][2] + player_margin*3) && (interaction_list[i][1] - player_margin*2 < y && y < interaction_list[i][3] + player_margin*3)){
 			if(stolen_list[i] == false){
@@ -201,10 +252,13 @@ function report_crime(x, y, socketId){
 				// Crime Reported
 				//
 				//
+				//newgame();
+				return true;
 			}
 			
 		}
 	}
+	return false;
 }
 
 
@@ -214,12 +268,18 @@ setInterval(function() {
 }, 1000 / 60);
 
 setInterval(function() {
-  io.sockets.emit('state', players);
+	io.sockets.emit('state', players);
+}, 1000 / 60);
+
+setInterval(function() {
+	io.sockets.emit('game_running', game_started);
+}, 1000 / 60);
+
+setInterval(function() {
+	io.sockets.emit('game_end', game_end);
 }, 1000 / 60);
 
 
-var gameslog = [];
-var game = [];
 setInterval(function() {
 	//console.log("==========")
 	//console.log("Time: ", game_time)
@@ -251,6 +311,7 @@ function savejson(){
 
 function newgame(){
 	game_started = false;
+	game_end = true;
 	game_time = game_length;
 	game_number++;
 	for (var id in players) {
@@ -284,3 +345,10 @@ function newgame(){
 setInterval(function() {
   io.sockets.emit('status', game_started, game_number);
 }, 1000 / 60);
+
+
+// Requests movemnts (allows for same speed for everyone)
+setInterval(function() {
+	io.sockets.emit('requestmovement');
+}, 1000 / 60);
+
