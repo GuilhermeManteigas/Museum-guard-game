@@ -117,3 +117,7 @@ function start_round(){
 function restart_experiment(){
 	socket.emit('restart_experiment');
 }
+
+function redo_round(){
+	socket.emit('redo_round');
+}
