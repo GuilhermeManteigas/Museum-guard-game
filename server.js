@@ -123,6 +123,13 @@ io.on('connection', function(socket) {
 		}
 	}
   });
+  socket.on('redo_round', function(){
+    gameslog[game_number-1] = [];
+	game_number--;
+	game_number--;
+	newgame();
+	
+  });
   socket.on('movement', function(data) {
 	  if (game_started){
 		var player = players[socket.id] || {};
