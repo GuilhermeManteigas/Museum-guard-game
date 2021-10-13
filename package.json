@@ -1,0 +1,24 @@
+{
+  "name": "museum-guard-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GuilhermeManteigas/Museum-guard-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GuilhermeManteigas/Museum-guard-game/issues"
+  },
+  "homepage": "https://github.com/GuilhermeManteigas/Museum-guard-game#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.2.0"
+  }
+}
