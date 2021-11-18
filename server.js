@@ -36,6 +36,10 @@ app.get('/admin', function(request, response) {
   response.sendFile(path.join(__dirname, '/static/admin.html'));
 });
 
+app.get('/replay', function(request, response) {
+  response.sendFile(path.join(__dirname, '/static/replay.html'));
+});
+
 
 // Starts the server.
 server.listen(process.env.PORT || 5000, function() {
@@ -275,6 +279,22 @@ setInterval(function() {
 }, 1000 / 60);
 
 setInterval(function() {
+	//Testing this
+	if (game_started && game_time > 0){
+		//gameslog[0].push(players);
+		var temp = []
+		for (var id in players) {
+			var player = players[id];
+			temp.push([player.color, player.x, player.y, player.role]);
+		}
+		game.push(temp);
+	}else if (game_started == false){
+		//io.sockets.emit('message', 'log!!!!');
+		gameslog.push(game);
+		game = []
+		io.sockets.emit('log', gameslog);
+	}
+	
 	io.sockets.emit('state', players);
 }, 1000 / 60);
 
@@ -290,6 +310,8 @@ setInterval(function() {
 setInterval(function() {
 	//console.log("==========")
 	//console.log("Time: ", game_time)
+	
+	/*
 	if (game_started && game_time > 0){
 		//gameslog[0].push(players);
 		var temp = []
@@ -304,6 +326,8 @@ setInterval(function() {
 		game = []
 		io.sockets.emit('log', gameslog);
 	}
+	*/
+	
 	//console.log("==========")
 	
 }, 1000);

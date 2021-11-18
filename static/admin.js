@@ -1,6 +1,7 @@
 var socket = io();
 var players;
 var game_time = 120;
+var logs = "";
 
 //Receive
 //socket.on('message', function(data) {
@@ -43,11 +44,12 @@ socket.on('status', function(game_started,gamelogslength) {
 });
 
 socket.on('log', function(gameslog) {
+	//logs = gameslog;
 	txt = "";
 	for (var i = 0; i < gameslog.length; i++){
 		for (var j = 0; j < gameslog[i].length; j++){
 			for (var c = 0; c < 4; c++){
-				txt = txt + gameslog[i][j][c] + "  ";
+				txt = txt + gameslog[i][j][c] + "|";
 			}
 			txt = txt + "\n";
 			//txt = txt + gameslog[i][j][0] + "\n";//": x = " + gameslog[i][j][1] + "  y = " + gameslog[i][j][2] + "\n";
@@ -55,6 +57,7 @@ socket.on('log', function(gameslog) {
 		}
 	}
 	document.getElementById("log").innerHTML = txt;
+	logs = txt;
 	
 	
 	//var textToSave = 'this is a test';
@@ -81,6 +84,17 @@ function get_time(){
 	}else{
 		return  "00:0" + game_time;
 	}
+}
+
+function downloadlogs(){
+	var textToSave = logs;
+
+	var hiddenElement = document.createElement('a');
+
+	hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
+	hiddenElement.target = '_blank';
+	hiddenElement.download = 'myFile.txt';
+	hiddenElement.click();
 }
 
 setInterval(function() {
