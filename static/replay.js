@@ -10,6 +10,7 @@ var game_running = false;
 var game_end = false;
 var playbacktime = 0;
 var running = false;
+var games = [];
 
 
 var loader = new PxLoader(), 
@@ -59,7 +60,7 @@ function drawscreen() {
 
   
   //console.log("0"); 
-  console.log(players); 
+  //console.log(players); 
   for (var player in players) {
 	//console.log("1"); 
     //var player = players[id];
@@ -112,46 +113,118 @@ function playpause(){
 	}
 }
 
+var previousround = 100
+function roundselector(round){
+	if (previousround < 100){
+		document.getElementById("game"+previousround).classList.remove('btn-danger');
+		document.getElementById("game"+previousround).classList.remove('btn-warning');
+		document.getElementById("game"+previousround).classList.add('btn-success');
+	}
+	previousround = round;
+	document.getElementById("game"+round).classList.remove('btn-danger');
+	document.getElementById("game"+round).classList.remove('btn-success');
+	document.getElementById("game"+round).classList.add('btn-warning');
+	console.log("1");
+	gameslog = games[round-1];
+	console.log(gameslog);
+	for (var line in gameslog) {
+			console.log(gameslog[line]);
+			var p = gameslog[line].split("|");
+			console.log(line); 
+			//for (var line in gameslog) {
+				//console.log("p number"); 
+			//}
+			players = [];
+			if (p.length > 1){
+				for (var c = 0; c < 4; c++){
+					//console.log("c"); 
+					temp = p[c].split(",")
+					console.log(temp);
+					if (temp.length > 1){
+						players[c] = {
+						  x: temp[1],
+						  y: temp[2],
+						  color: temp[0],
+						  role: temp[3]
+						};
+					}
+				}
+			}
+			gamemoves.push(players);
+		}
+}
+
 function loadlogs(){
 	gameslog = document.getElementById("log").value.split("\n");
 	//console.log(document.getElementById("log").value.split("\n"));
 	//txt = "";
 	//console.log(gameslog); 
+	//console.log(gameslog);
+	//games = gameslog.split("&");
+	count = 0;
+	temp = [];
+	games = [];
 	for (var line in gameslog) {
-		//console.log(gameslog[line]);
-		var p = gameslog[line].split("|");
-		//console.log(line); 
-		//for (var line in gameslog) {
-			//console.log("p number"); 
-		//}
-		players = [];
-		for (var c = 0; c < 4; c++){
-			//console.log("c"); 
-			temp = p[c].split(",")
-			//console.log(temp);
-			if (temp.length > 1){
-				players[c] = {
-				  x: temp[1],
-				  y: temp[2],
-				  color: temp[0],
-				  role: temp[3]
-				};
-			}
+		temp.push(gameslog[line]);
+		//games[count].push(gameslog[line])
+		if (gameslog[line].includes("&")){
+			document.getElementById("game"+(count+1)).classList.remove('btn-danger');
+			document.getElementById("game"+(count+1)).classList.remove('btn-warning');
+			document.getElementById("game"+(count+1)).classList.add('btn-success');
+			count++;
+			games.push(temp);
+			temp = [];
 		}
-		gamemoves.push(players);
 	}
-	console.log(gamemoves);
+	//for (var game in games) {
+		
+		/*for (var line in gameslog) {
+			//console.log(gameslog[line]);
+			var p = gameslog[line].split("|");
+			//console.log(line); 
+			//for (var line in gameslog) {
+				//console.log("p number"); 
+			//}
+			players = [];
+			for (var c = 0; c < 4; c++){
+				//console.log("c"); 
+				temp = p[c].split(",")
+				//console.log(temp);
+				if (temp.length > 1){
+					players[c] = {
+					  x: temp[1],
+					  y: temp[2],
+					  color: temp[0],
+					  role: temp[3]
+					};
+				}
+			}
+			gamemoves.push(players);
+		}*/
+	//}
+	//console.log(gamemoves);
 	
 }
 
+function back(seconds){
+	if (playbacktime - 15 > 0){
+		playbacktime -= seconds * 60;
+	}
+}
 
+function forward(seconds){
+	if (playbacktime < gamemoves.length-1){
+		playbacktime += seconds * 60;
+	}
+}
 
 setInterval(function() {
 	if (running){
-		
-		players = gamemoves[playbacktime];
-		console.log(players);
-		playbacktime++;
+		if (playbacktime < gamemoves.length-1){
+			players = gamemoves[playbacktime];
+			//console.log(players);
+			playbacktime++;
+		}
 
 		
 	}

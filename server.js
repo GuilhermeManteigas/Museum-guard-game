@@ -278,18 +278,21 @@ setInterval(function() {
   //console.log(stolen_list);
 }, 1000 / 60);
 
+var logsent = true;
 setInterval(function() {
 	//Testing this
 	if (game_started && game_time > 0){
 		//gameslog[0].push(players);
+		logsent = false;
 		var temp = []
 		for (var id in players) {
 			var player = players[id];
 			temp.push([player.color, player.x, player.y, player.role]);
 		}
 		game.push(temp);
-	}else if (game_started == false){
+	}else if (game_started == false && logsent == false){
 		//io.sockets.emit('message', 'log!!!!');
+		logsent = true;
 		gameslog.push(game);
 		game = []
 		io.sockets.emit('log', gameslog);

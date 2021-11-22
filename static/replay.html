@@ -9,7 +9,14 @@
   <body>
   <div style="max-width: 1400px;margin: auto;">
 	<center>
-	<br>
+	<h3>Rounds:</h3>
+	<button id="game1" type="button" class="btn btn-lg btn-danger" style="width: 50px;" onclick="roundselector(1)">1</button>
+	<button id="game2" type="button" class="btn btn-lg btn-danger" style="width: 50px;" onclick="roundselector(2)">2</button>
+	<button id="game3" type="button" class="btn btn-lg btn-danger" style="width: 50px;" onclick="roundselector(3)">3</button>
+	<button id="game4" type="button" class="btn btn-lg btn-danger" style="width: 50px;" onclick="roundselector(4)">4</button>
+	<button id="game5" type="button" class="btn btn-lg btn-danger" style="width: 50px;" onclick="roundselector(5)">5</button>
+	<button id="game6" type="button" class="btn btn-lg btn-danger" style="width: 50px;" onclick="roundselector(6)">6</button>
+	<br><br><br>
 	<div style="position: relative;">
 	 <canvas id="canvas" width="1400" height="800" style="position: absolute; left: 0; top: 0; z-index: 0;border: 5px solid black;"></canvas>
 	 <canvas id="filter" width="1400" height="800" style="position: absolute; left: 0; top: 0; z-index: 1;border: 5px solid black;"></canvas>
@@ -18,7 +25,9 @@
 	<h4><b>Log:</b></h4>
 	<textarea id="log"  rows="5" cols="100"></textarea>
 	<button type="button" class="btn btn-lg btn-primary" style="width: 250px;" onclick="loadlogs()">Load logs</button>
-	<button type="button" class="btn btn-lg btn-primary" style="width: 250px;" onclick="playpause()">play</button>
+	<button type="button" class="btn btn-lg btn-primary" style="width: 250px;" onclick="playpause()">Play</button>
+	<button type="button" class="btn btn-lg btn-primary" style="width: 250px;" onclick="back(1)"> < 1S</button>
+	<button type="button" class="btn btn-lg btn-primary" style="width: 250px;" onclick="forward(1)"> 1S ></button>
   </div>
   </body>
   <script src="/static/replay.js"></script>

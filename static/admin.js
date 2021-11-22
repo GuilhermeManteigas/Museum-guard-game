@@ -55,6 +55,8 @@ socket.on('log', function(gameslog) {
 			//txt = txt + gameslog[i][j][0] + "\n";//": x = " + gameslog[i][j][1] + "  y = " + gameslog[i][j][2] + "\n";
 			//[player.color, player.x, player.y, player.role]
 		}
+		txt = txt + "&";
+		txt = txt + "\n";
 	}
 	document.getElementById("log").innerHTML = txt;
 	logs = txt;
