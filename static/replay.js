@@ -108,8 +108,14 @@ function brigth(){
 function playpause(){
 	if(running){
 		running = false;
+		document.getElementById("playpause").classList.remove('btn-danger');
+		document.getElementById("playpause").classList.add('btn-success');
+		document.getElementById("playpause").innerHTML = "Play";
 	}else{
 		running = true;
+		document.getElementById("playpause").classList.remove('btn-success');
+		document.getElementById("playpause").classList.add('btn-danger');
+		document.getElementById("playpause").innerHTML = "Stop";
 	}
 }
 

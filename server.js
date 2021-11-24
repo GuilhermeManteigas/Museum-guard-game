@@ -18,7 +18,8 @@ canvaswidth = 1400;
 canvasheight = 800;
 player_margin = 15;
 
-game_randomness = ['yellow','red','green','blue','yellow','red']; //Total 6 games
+game_randomness = []
+randomize_game();//['yellow','red','green','blue','yellow','red']; //Total 6 games
 game_number = 0;
 game_started = false;
 game_length = 120;
@@ -97,7 +98,7 @@ io.on('connection', function(socket) {
 	game_end = false;
   });
   socket.on('restart_experiment', function(){
-	game_randomness = ['yellow','red','green','blue','yellow','red']; //Total 6 games
+	randomize_game();
 	game_number = 0;
 	game_started = false;
 	game_length = 120;
@@ -209,7 +210,7 @@ io.on('connection', function(socket) {
 });
 
 
-colision_list = [[311, 98, 337, 117],[311, 114, 446, 140],[420, 138, 446, 311],[420, 385, 446, 636],[420, 712, 446, 782],[445, 225, 600, 251],[675, 225, 1249, 251],[1326, 225, 1386, 251],[24, 471, 69, 497],[142, 471, 594, 497],[670, 471, 857, 497],[831, 250, 857, 320],[831, 395, 857, 615],[831, 593, 1134, 619],[1108, 593, 1134, 677],[1108, 750, 1134, 780],[947, 20, 973, 99],[889, 73, 969, 99],[947, 155, 973, 235],[889, 155, 969, 181],[25, 171, 92, 234],[445, 158, 512, 225],[1119, 25, 1182, 95],[1305, 439, 1375, 502],[772, 706, 835, 776],[354, 496, 421, 563]];
+colision_list = [[311, 98, 337, 117],[311, 114, 446, 140],[420, 138, 446, 311],[420, 385, 446, 636],[420, 712, 446, 782],[445, 225, 600, 251],[675, 225, 1249, 251],[1326, 225, 1386, 251],[24, 471, 69, 497],[142, 471, 594, 497],[670, 471, 857, 497],[831, 250, 857, 320],[831, 395, 857, 615],[831, 593, 1134, 619],[1108, 593, 1134, 677],[1108, 750, 1134, 780],[947, 20, 973, 99],[889, 73, 969, 99],[947, 155, 973, 235],[889, 155, 969, 181],[25, 171, 92, 234],[445, 158, 512, 225],[1119, 25, 1182, 95],[1305, 439, 1375, 502],[772, 706, 835, 776],[354, 496, 421, 563],[24, 715, 87, 780],[856, 534, 919, 599],[1321, 24, 1384, 78],[570, 610, 660, 670]];
 function check_colisions(x, y){
 	var colision = false;
 	for (let i = 0; i < colision_list.length; i++) {
@@ -272,6 +273,23 @@ function check_crime(x, y){
 	return false;
 }
 
+function randomize_game(){
+	rand = Math.floor(Math.random() * 6);
+	if (rand == 0){
+		game_randomness = ['yellow','red','green','blue','yellow','red'];
+	}else if(rand == 1){
+		game_randomness = ['red','blue','green','yellow','blue','green'];
+	}else if(rand == 2){
+		game_randomness = ['blue','red','green','yellow','yellow','red'];
+	}else if(rand == 3){
+		game_randomness = ['green','red','yellow','blue','green','red'];
+	}else if(rand == 4){
+		game_randomness = ['yellow','green','red','green','blue','yellow'];
+	}else if(rand == 5){
+		game_randomness = ['blue','green','red','yellow','yellow','green'];
+	}
+
+}
 
 setInterval(function() {
   io.sockets.emit('stolen_gems', stolen_list);

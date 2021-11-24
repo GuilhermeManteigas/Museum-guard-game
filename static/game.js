@@ -17,6 +17,9 @@ var loader = new PxLoader(),
 	gem4 = loader.addImage('static/assets/gem4.png'),
 	gem5 = loader.addImage('static/assets/gem5.png'),
 	gem6 = loader.addImage('static/assets/gem6.png'),
+	plant1 = loader.addImage('static/assets/plant1.png'),
+	plant2 = loader.addImage('static/assets/plant2.png'),
+	statue = loader.addImage('static/assets/statue.png'),
 	diamond = loader.addImage('static/assets/diamond.png');
 
 
@@ -269,6 +272,20 @@ function drawscreen() {
   if (gem_list[5]){
 	  context.drawImage(gem6, 354, 500);
   }
+  
+  
+  context.drawImage(plant1, 24, 650);
+  context.drawImage(plant2, 858, 480);
+  context.drawImage(statue, 570, 550);
+  
+  
+  /////////HEREEEEEEEE////
+  //context.rect(24, 715, 63, 65);
+  //context.rect(856, 534, 63, 65);
+  //context.rect(1321, 24, 63, 54);
+  //context.rect(570, 610, 90, 60);
+  //context.stroke();
+  ////////////////////////////////
 
   
   

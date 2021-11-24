@@ -32,15 +32,19 @@ socket.on('status', function(game_started,gamelogslength) {
 		document.getElementById("status").innerHTML = "Current Game status: Stopped";
 	}
 	for (i =0;i <= gamelogslength; i++){
-		number =i + 1;
-		//var name = "game" + i
-		document.getElementById("game"+number).classList.remove('btn-danger');
-		document.getElementById("game"+number).classList.remove('btn-warning');
-		document.getElementById("game"+number).classList.add('btn-success');
+		if (gamelogslength <=5){
+			number =i + 1;
+			//var name = "game" + i
+			document.getElementById("game"+number).classList.remove('btn-danger');
+			document.getElementById("game"+number).classList.remove('btn-warning');
+			document.getElementById("game"+number).classList.add('btn-success');
+		}
 	}
-	document.getElementById("game"+(gamelogslength+1)).classList.remove('btn-danger');
-	document.getElementById("game"+(gamelogslength+1)).classList.remove('btn-success');
-	document.getElementById("game"+(gamelogslength+1)).classList.add('btn-warning');
+	if (gamelogslength <=5){
+		document.getElementById("game"+(gamelogslength+1)).classList.remove('btn-danger');
+		document.getElementById("game"+(gamelogslength+1)).classList.remove('btn-success');
+		document.getElementById("game"+(gamelogslength+1)).classList.add('btn-warning');
+	}
 });
 
 socket.on('log', function(gameslog) {
@@ -95,7 +99,8 @@ function downloadlogs(){
 
 	hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
 	hiddenElement.target = '_blank';
-	hiddenElement.download = 'myFile.txt';
+	const d = new Date();
+	hiddenElement.download = 'Gamelog ' + d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + " " + d.getHours() + ";" + d.getMinutes() + '.txt';
 	hiddenElement.click();
 }
 
