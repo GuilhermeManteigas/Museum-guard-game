@@ -4,7 +4,7 @@ var playerinteraction = false;
 var players = [];
 var gamemoves = [];
 var game_time = 120;
-var gem_list = [];
+var gem_list = [true,true,true,true,true,true];
 var nigth = true;
 var game_running = false;
 var game_end = false;
@@ -21,6 +21,9 @@ var loader = new PxLoader(),
 	gem4 = loader.addImage('static/assets/gem4.png'),
 	gem5 = loader.addImage('static/assets/gem5.png'),
 	gem6 = loader.addImage('static/assets/gem6.png'),
+	plant1 = loader.addImage('static/assets/plant1.png'),
+	plant2 = loader.addImage('static/assets/plant2.png'),
+	statue = loader.addImage('static/assets/statue.png'),
 	diamond = loader.addImage('static/assets/diamond.png');
 
 
@@ -51,12 +54,29 @@ function drawscreen() {
   context.font = "bold 15px Arial";
   
   
-	context.drawImage(gem1, 29, 171);
-	context.drawImage(gem2, 449, 158);
-	context.drawImage(gem3, 1119, 32);
-	context.drawImage(gem4, 1305, 439);
-	context.drawImage(gem5, 772, 706);
-	context.drawImage(gem6, 354, 500);
+  if (gem_list[0]){
+	  context.drawImage(gem1, 29, 171);
+  }
+  if (gem_list[1]){
+	  context.drawImage(gem2, 449, 158);
+  }
+  if (gem_list[2]){
+	  context.drawImage(gem3, 1119, 32);
+  }
+  if (gem_list[3]){
+	  context.drawImage(gem4, 1305, 439);
+  }
+  if (gem_list[4]){
+	  context.drawImage(gem5, 772, 706);
+  }
+  if (gem_list[5]){
+	  context.drawImage(gem6, 354, 500);
+  }
+	
+	
+	context.drawImage(plant1, 24, 650);
+	context.drawImage(plant2, 858, 480);
+	context.drawImage(statue, 570, 550);
 
   
   //console.log("0"); 
@@ -131,10 +151,18 @@ function roundselector(round){
 	document.getElementById("game"+round).classList.remove('btn-success');
 	document.getElementById("game"+round).classList.add('btn-warning');
 	console.log("1");
+	gem_list = [true,true,true,true,true,true];
 	gameslog = games[round-1];
 	console.log(gameslog);
 	for (var line in gameslog) {
-			console.log(gameslog[line]);
+		console.log(gameslog[line]);
+		if (gameslog[line].includes("Gem#")){
+			////HEREEEEE
+			//var g = gameslog[line].split("#");
+			//gem_list[g[1]] = false;
+			gamemoves.push(gameslog[line]);
+			
+		}else{
 			var p = gameslog[line].split("|");
 			console.log(line); 
 			//for (var line in gameslog) {
@@ -158,6 +186,7 @@ function roundselector(round){
 			}
 			gamemoves.push(players);
 		}
+	}
 }
 
 function loadlogs(){
@@ -227,7 +256,12 @@ function forward(seconds){
 setInterval(function() {
 	if (running){
 		if (playbacktime < gamemoves.length-1){
-			players = gamemoves[playbacktime];
+			if (gamemoves[playbacktime].includes("Gem#")){
+				var g = gamemoves[playbacktime].split("#");
+				gem_list[g[1]] = false;
+			}else{
+				players = gamemoves[playbacktime];
+			}
 			//console.log(players);
 			playbacktime++;
 		}

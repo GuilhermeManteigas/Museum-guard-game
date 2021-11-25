@@ -129,7 +129,8 @@ io.on('connection', function(socket) {
 	}
   });
   socket.on('redo_round', function(){
-    gameslog[game_number-1] = [];
+    //gameslog[game_number-1] = [];
+	gameslog.pop();
 	game_number--;
 	game_number--;
 	newgame();
@@ -251,6 +252,12 @@ function steal_gem(x, y, socketId){
 			//		console.log(stolen_list);
 			//	}
 			//}
+			
+			
+			//////HEREEEEEEEEEE///////////////////////
+			game.push("Gem#" + i + "#was stolen");
+			
+			
 		}
 	}
 }

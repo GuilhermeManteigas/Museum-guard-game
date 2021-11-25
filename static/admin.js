@@ -52,8 +52,12 @@ socket.on('log', function(gameslog) {
 	txt = "";
 	for (var i = 0; i < gameslog.length; i++){
 		for (var j = 0; j < gameslog[i].length; j++){
-			for (var c = 0; c < 4; c++){
-				txt = txt + gameslog[i][j][c] + "|";
+			if (gameslog[i][j].includes("Gem#")){
+				txt = txt + gameslog[i][j];
+			}else{
+				for (var c = 0; c < 4; c++){
+					txt = txt + gameslog[i][j][c] + "|";
+				}
 			}
 			txt = txt + "\n";
 			//txt = txt + gameslog[i][j][0] + "\n";//": x = " + gameslog[i][j][1] + "  y = " + gameslog[i][j][2] + "\n";
